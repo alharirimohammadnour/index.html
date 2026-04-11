@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nour Digital — Pittsburgh's Premier Web Design Agency</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
@@ -364,6 +364,43 @@
     /* Section spacing */
     section { position: relative; z-index: 1; }
 
+    /* ── Force hamburger hidden on desktop ── */
+    @media (min-width: 768px) {
+      #menu-toggle { display: none !important; }
+      #mobile-menu { display: none !important; }
+    }
+    @media (max-width: 767px) {
+      .desktop-nav { display: none !important; }
+    }
+
+    /* ── Rotating Headline ── */
+    .rotating-word {
+      display: inline-block;
+      position: relative;
+    }
+    .rotating-word .word {
+      display: inline-block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none;
+    }
+    .rotating-word .word.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      position: relative;
+    }
+    /* Sizer — invisible, reserves space for the widest word */
+    .rotating-word .word-sizer {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     /* ── Nour 'N' Logo Mark ── */
     .nour-logo-mark {
       position: relative;
@@ -461,17 +498,17 @@
 
 ```
 <!-- Desktop Nav -->
-<div class="hidden md:flex items-center gap-8">
+<div class="desktop-nav hidden md:flex items-center gap-8">
   <a href="#services" class="text-sm text-slate-400 hover:text-white transition-colors font-body">Services</a>
-  <a href="#portfolio" class="text-sm text-slate-400 hover:text-white transition-colors font-body">Portfolio</a>
   <a href="#pricing" class="text-sm text-slate-400 hover:text-white transition-colors font-body">Pricing</a>
   <a href="#local" class="text-sm text-slate-400 hover:text-white transition-colors font-body">About</a>
   <a href="#contact" class="btn-primary px-5 py-2.5 rounded-lg text-sm inline-block">Get a Quote</a>
 </div>
 
-<!-- Mobile Hamburger -->
-<button id="menu-toggle" class="md:hidden text-slate-400 hover:text-white" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
-  <i data-lucide="menu" class="w-6 h-6"></i>
+<!-- Mobile Hamburger — hidden on desktop via CSS -->
+<button id="menu-toggle" class="md:hidden text-slate-400 hover:text-white p-2 rounded-lg transition-colors" style="border: 1px solid rgba(46,185,240,0.2);" aria-label="Open menu">
+  <svg id="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <svg id="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 </button>
 ```
 
@@ -479,13 +516,25 @@
 
   <!-- Mobile Menu -->
 
-  <div id="mobile-menu" class="md:hidden border-t px-6 py-4 space-y-3" style="border-color: var(--border); background: rgba(8,12,18,0.98);">
-    <a href="#services" class="block text-slate-300 hover:text-white py-2">Services</a>
-    <a href="#portfolio" class="block text-slate-300 hover:text-white py-2">Portfolio</a>
-    <a href="#pricing" class="block text-slate-300 hover:text-white py-2">Pricing</a>
-    <a href="#local" class="block text-slate-300 hover:text-white py-2">About</a>
-    <a href="#contact" class="btn-primary px-5 py-2.5 rounded-lg text-sm inline-block mt-2">Get a Quote</a>
-  </div>
+  <div id="mobile-menu" class="border-t px-6 py-5 space-y-1" style="display:none; border-color: var(--border); background: rgba(8,12,18,0.98);">
+    <a href="#services" class="mobile-nav-link flex items-center gap-3 text-slate-300 hover:text-white py-3 px-3 rounded-lg hover:bg-white/5 transition-all font-body">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Services
+    </a>
+    <a href="#pricing" class="mobile-nav-link flex items-center gap-3 text-slate-300 hover:text-white py-3 px-3 rounded-lg hover:bg-white/5 transition-all font-body">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Pricing
+    </a>
+    <a href="#local" class="mobile-nav-link flex items-center gap-3 text-slate-300 hover:text-white py-3 px-3 rounded-lg hover:bg-white/5 transition-all font-body">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      About Us
+    </a>
+    <div class="pt-3 pb-1">
+      <a href="#contact" class="btn-primary w-full py-3 rounded-xl text-sm font-display font-700 flex items-center justify-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Get a Free Quote
+      </a>
+    </div>
 </nav>
 
 <!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
@@ -509,11 +558,32 @@
     </div>
 
 ```
-<!-- Headline -->
-<h1 class="animate-fade-up-delay-1 font-display font-800 text-white leading-none mb-6" style="font-size: clamp(2.8rem, 7vw, 6rem); letter-spacing: -0.03em;">
-  We Build <span class="text-gradient">High-Performance</span><br/>
-  Websites For Local<br/>
-  Businesses That Win.
+<!-- Headline with rotating words -->
+<h1 id="hero-headline" class="animate-fade-up-delay-1 font-display font-800 text-white leading-none mb-6" style="font-size: clamp(2.5rem, 6.5vw, 5.5rem); letter-spacing: -0.03em;">
+  We Build
+  <span class="text-gradient rotating-word" id="rw-adjective">
+    <span class="word active">High-Performance</span>
+    <span class="word">Conversion-Ready</span>
+    <span class="word">Stunning</span>
+    <span class="word">Future-Proof</span>
+    <span class="word word-sizer" aria-hidden="true">High-Performance</span>
+  </span><br/>
+  Websites For
+  <span class="text-gradient rotating-word" id="rw-who">
+    <span class="word active">Local Businesses</span>
+    <span class="word">Restaurants &amp; Shops</span>
+    <span class="word">Service Companies</span>
+    <span class="word">Pittsburgh Brands</span>
+    <span class="word word-sizer" aria-hidden="true">Restaurants &amp; Shops</span>
+  </span><br/>
+  That
+  <span class="text-gradient rotating-word" id="rw-result">
+    <span class="word active">Win.</span>
+    <span class="word">Convert.</span>
+    <span class="word">Dominate.</span>
+    <span class="word">Grow.</span>
+    <span class="word word-sizer" aria-hidden="true">Dominate.</span>
+  </span>
 </h1>
 
 <p class="animate-fade-up-delay-2 font-body text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -522,12 +592,12 @@
 
 <!-- CTA Buttons -->
 <div class="animate-fade-up-delay-3 flex flex-col sm:flex-row gap-4 justify-center">
-  <a href="#portfolio" class="btn-primary px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 justify-center">
-    <i data-lucide="eye" class="w-5 h-5"></i>
-    View Our Work
+  <a href="#services" class="btn-primary px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 justify-center">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    See Our Services
   </a>
   <a href="#contact" class="btn-secondary px-8 py-4 rounded-xl text-base inline-flex items-center gap-2 justify-center">
-    <i data-lucide="send" class="w-5 h-5"></i>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
     Get a Quote
   </a>
 </div>
@@ -582,7 +652,7 @@
   <!-- Card 1 -->
   <div class="service-card rounded-2xl p-8">
     <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style="background: rgba(46,185,240,0.12); border: 1px solid rgba(46,185,240,0.2);">
-      <i data-lucide="layout" class="w-7 h-7" style="color: var(--electric);"></i>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
     </div>
     <h3 class="font-display font-700 text-white text-2xl mb-3">Custom Web Design</h3>
     <p class="text-slate-400 font-body leading-relaxed mb-6">Hand-crafted websites built from scratch — no templates, no shortcuts. Pixel-perfect designs that reflect your brand and convert visitors.</p>
@@ -596,7 +666,7 @@
   <!-- Card 2 -->
   <div class="service-card rounded-2xl p-8">
     <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style="background: rgba(46,185,240,0.12); border: 1px solid rgba(46,185,240,0.2);">
-      <i data-lucide="shield-check" class="w-7 h-7" style="color: var(--electric);"></i>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <h3 class="font-display font-700 text-white text-2xl mb-3">Hosting & Maintenance</h3>
     <p class="text-slate-400 font-body leading-relaxed mb-6">We handle every technical detail so you never have to worry. Secure, fast, and always-online hosting with proactive maintenance.</p>
@@ -610,7 +680,7 @@
   <!-- Card 3 -->
   <div class="service-card rounded-2xl p-8">
     <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style="background: rgba(46,185,240,0.12); border: 1px solid rgba(46,185,240,0.2);">
-      <i data-lucide="trending-up" class="w-7 h-7" style="color: var(--electric);"></i>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
     </div>
     <h3 class="font-display font-700 text-white text-2xl mb-3">SEO & Google Business</h3>
     <p class="text-slate-400 font-body leading-relaxed mb-6">Dominate local search results. We optimize your site and Google Business Profile to put you in front of Pittsburgh customers actively looking for you.</p>
@@ -834,7 +904,7 @@
   <div class="addon-card rounded-xl p-7">
     <div class="flex items-start gap-4 mb-5">
       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(46,185,240,0.1); border: 1px solid rgba(46,185,240,0.25);">
-        <i data-lucide="pen-tool" class="w-6 h-6" style="color: var(--electric);"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
       </div>
       <div>
         <div class="font-display text-white text-xl font-700">Logo Design</div>
@@ -856,7 +926,7 @@
   <div class="addon-card rounded-xl p-7" style="border-left-color: #38bdf8; border-left-width: 3px;">
     <div class="flex items-start gap-4 mb-5">
       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(46,185,240,0.1); border: 1px solid rgba(46,185,240,0.25);">
-        <i data-lucide="layers" class="w-6 h-6" style="color: var(--electric);"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
       </div>
       <div>
         <div class="font-display text-white text-xl font-700">The Identity Pack</div>
@@ -878,7 +948,7 @@
   <div class="addon-card rounded-xl p-7">
     <div class="flex items-start gap-4 mb-5">
       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: rgba(46,185,240,0.1); border: 1px solid rgba(46,185,240,0.25);">
-        <i data-lucide="megaphone" class="w-6 h-6" style="color: var(--electric);"></i>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2EB9F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
       </div>
       <div>
         <div class="font-display text-white text-xl font-700">Digital Ad Pack</div>
@@ -1128,63 +1198,82 @@
 
 <!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════════ -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+  // Init Lucide Icons
+  lucide.createIcons();
 
-// Init Lucide Icons
-lucide.createIcons();
+  // ── Pricing Toggle ──
+  var isYearly = false;
 
-// ── Pricing Toggle ──
-let isYearly = false;
+  function togglePricing() {
+    isYearly = !isYearly;
+    var thumb        = document.getElementById('toggle-thumb');
+    var labelMonthly = document.getElementById('label-monthly');
+    var labelYearly  = document.getElementById('label-yearly');
 
-function togglePricing() {
-isYearly = !isYearly;
-const thumb = document.getElementById(‘toggle-thumb’);
-const labelMonthly = document.getElementById(‘label-monthly’);
-const labelYearly = document.getElementById(‘label-yearly’);
+    if (isYearly) {
+      thumb.style.transform        = 'translateX(28px)';
+      labelMonthly.style.color     = '#64748b';
+      labelYearly.style.color      = '#2EB9F0';
+      document.getElementById('price-basic').textContent    = '$39';
+      document.getElementById('price-pro').textContent      = '$79';
+      document.getElementById('price-ultimate').textContent = '$119';
+      document.getElementById('yearly-basic').classList.remove('hidden');
+      document.getElementById('yearly-pro').classList.remove('hidden');
+      document.getElementById('yearly-ultimate').classList.remove('hidden');
+    } else {
+      thumb.style.transform        = 'translateX(0)';
+      labelMonthly.style.color     = '#2EB9F0';
+      labelYearly.style.color      = '#64748b';
+      document.getElementById('price-basic').textContent    = '$49';
+      document.getElementById('price-pro').textContent      = '$99';
+      document.getElementById('price-ultimate').textContent = '$149';
+      document.getElementById('yearly-basic').classList.add('hidden');
+      document.getElementById('yearly-pro').classList.add('hidden');
+      document.getElementById('yearly-ultimate').classList.add('hidden');
+    }
+  }
+  // Wire toggle via addEventListener so it works regardless of Cloudflare rewrites
+  document.addEventListener('DOMContentLoaded', function () {
+    var track = document.getElementById('toggle-track');
+    if (track) track.addEventListener('click', togglePricing);
+  });
+  // Also expose globally for the inline onclick fallback
+  window.togglePricing = togglePricing;
 
-```
-if (isYearly) {
-  thumb.style.transform = 'translateX(28px)';
-  labelMonthly.style.color = '#64748b';
-  labelYearly.style.color = 'var(--electric)';
-  document.getElementById('price-basic').textContent = '$39';
-  document.getElementById('price-pro').textContent = '$79';
-  document.getElementById('price-ultimate').textContent = '$119';
-  document.getElementById('yearly-basic').classList.remove('hidden');
-  document.getElementById('yearly-pro').classList.remove('hidden');
-  document.getElementById('yearly-ultimate').classList.remove('hidden');
-} else {
-  thumb.style.transform = 'translateX(0)';
-  labelMonthly.style.color = 'var(--electric)';
-  labelYearly.style.color = '#64748b';
-  document.getElementById('price-basic').textContent = '$49';
-  document.getElementById('price-pro').textContent = '$99';
-  document.getElementById('price-ultimate').textContent = '$149';
-  document.getElementById('yearly-basic').classList.add('hidden');
-  document.getElementById('yearly-pro').classList.add('hidden');
-  document.getElementById('yearly-ultimate').classList.add('hidden');
-}
-```
+  // ── Form Submit ──
+  window.handleSubmit = function(e) {
+    e.preventDefault();
+    var success = document.getElementById('form-success');
+    success.classList.remove('hidden');
+    e.target.reset();
+    setTimeout(function() { success.classList.add('hidden'); }, 5000);
+  };
 
-}
+  // ── Mobile Menu ──
+  document.querySelectorAll('#mobile-menu a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.remove('open');
+    });
+  });
 
-// ── Form Submit ──
-function handleSubmit(e) {
-e.preventDefault();
-const success = document.getElementById(‘form-success’);
-success.classList.remove(‘hidden’);
-e.target.reset();
-setTimeout(() => success.classList.add(‘hidden’), 5000);
-}
+  // ── Scroll Animations ──
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity  = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
 
-// ── Mobile Menu Close on Link Click ──
-document.querySelectorAll(’#mobile-menu a’).forEach(link => {
-link.addEventListener(‘click’, () => {
-document.getElementById(‘mobile-menu’).classList.remove(‘open’);
-});
-});
+  document.querySelectorAll('.service-card, .glass-card, .addon-card, .advantage-item').forEach(function(el) {
+    el.style.opacity   = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1)';
+    observer.observe(el);
+  });
+</script>
 
-// ── Scroll Animations ──
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) {
+</body>
+</html>
